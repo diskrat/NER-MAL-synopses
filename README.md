@@ -20,30 +20,33 @@ O objetivo é analisar o conteúdo textual das sinopses para extrair entidades n
 
 ### Pipeline esperado
 1. **Extração de dados**
-   - Coleta de animes do MyAnimeList com `src/api_mal.py`.
-2. **Processamento de texto**
-   - Limpeza e normalização das sinopses.
-3. **NER e co-ocorrência**
-   - Extração de entidades e construção de grafos de relacionamento.
-4. **Cálculo de similaridade**
-   - Medidas como Jaccard entre conjuntos de entidades ou tokens.
-5. **Visualização e análise crítica**
-   - Interpretação de resultados e comparação de diferentes granularidades de análise.
+   - Carrega documentos PDF presentes em `data/raw/` como entrada principal.
+2. **Extração de texto**
+   - Converte os PDFs em texto bruto utilizando `PyPDF2`.
+3. **Exportação de texto**
+   - Salva os textos extraídos em `data/processed/raw_texts/` como `.txt`.
+4. **Processamento de texto**
+   - Limpeza e normalização dos textos extraídos.
+5. **NER e co-ocorrência**
+   - Extração de entidades nomeadas com spaCy e construção de grafos de co-ocorrência.
+6. **Análise de desempenho**
+   - Comparação entre granulações: sentença, parágrafo e blocos de caracteres.
+7. **Visualização e análise crítica**
+   - Salvamento de grafos em `output/graph.gexf` e `output/graph.svg`, além de métricas em `data/processed/`.
 
 ---
 
 ## (iii) Situação Atual
 ### O que já está implementado
-- `src/api_mal.py`: script de extração de animes do MyAnimeList com paginação e salvamento em `data/raw/`.
-- Dados brutos armazenados em `data/raw/animes-XXXX.json`.
-- Estrutura inicial de projeto e dependências listadas.
+- Pipeline de extração de texto de PDFs diretamente em `data/raw/` usando `PyPDF2`.
+- Extração de entidades nomeadas via spaCy e geração de grafo de co-ocorrência.
+- Comparação de desempenho entre segmentação por sentença, parágrafo e blocos de caracteres.
+- Exportação de resultados em `output/graph.gexf`, `output/graph.svg` e `data/processed/performance_metrics.json`.
+- Fallback para processamento de registros JSON em `data/raw/` quando não há PDFs.
 
 ### O que falta implementar
-- Pipeline de NER para as sinopses.
-- Cálculo de similaridade entre animes.
-- Construção do grafo de co-ocorrência e visualizações.
-- Análise comparativa de desempenho por sentença, parágrafo e blocos de caracteres.
-- Preenchimento de resultados e conclusão no relatório.
+- Documentar resultados qualitativos finais e conclusões.
+- Produzir a apresentação assíncrona Loom.
 
 ---
 
@@ -65,15 +68,18 @@ TBA
 ## Instalação (Como rodar localmente)
 1. Ative o ambiente virtual: `source venv/bin/activate`
 2. Instale as dependências: `pip install -r requirements.txt`
-3. Configure `MAL_CLIENT_ID` no arquivo `.env`.
-4. Execute a extração de dados: `python src/api_mal.py`
-5. Execute o pipeline completo de análise: `python main.py`
+3. Coloque os PDFs de entrada em `data/raw/`.
+4. Execute o pipeline completo de análise: `python main.py`
+
+## Testes
+1. Instale as dependências: `pip install -r requirements.txt`
+2. Execute os testes: `pytest`
 
 > Se o modelo spaCy não estiver instalado, o `main.py` irá baixar automaticamente `en_core_web_sm` na primeira execução.
 
 ---
 
 ## Observações
-- O PDF em `data/docs/U1T1.pdf` reforça o escopo do projeto: NER, grafos de co-ocorrência e análise de desempenho.
-- O repositório agora inclui um pipeline inicial para processar as sinopses, extrair entidades e gerar um grafo de similaridade.
-- O resultado do grafo será salvo em `output/graph.svg` e os pares de similaridade em `data/processed/similarity_pairs.json`.
+- O PDF em `data/docs/U1T1.pdf` é o guia do trabalho e não a fonte de entrada principal do pipeline.
+- O pipeline agora processa os PDFs em `data/raw/`, extrai texto, identifica entidades e gera grafos de co-ocorrência.
+- O resultado do grafo é salvo em `output/graph.gexf` e `output/graph.svg`; as métricas de segmentação são gravadas em `data/processed/performance_metrics.json`.
