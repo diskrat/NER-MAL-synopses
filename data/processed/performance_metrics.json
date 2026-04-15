@@ -1,0 +1,29 @@
+{
+  "sentence": {
+    "documents_processed": 21,
+    "segments_total": 12658,
+    "segments_with_entities": 3219,
+    "total_entities": 4744,
+    "unique_entities": 230,
+    "avg_entities_per_segment": 1.474,
+    "processing_time_seconds": 0.048
+  },
+  "paragraph": {
+    "documents_processed": 21,
+    "segments_total": 16943,
+    "segments_with_entities": 1160,
+    "total_entities": 2709,
+    "unique_entities": 224,
+    "avg_entities_per_segment": 2.335,
+    "processing_time_seconds": 0.04
+  },
+  "k_chars": {
+    "documents_processed": 21,
+    "segments_total": 843,
+    "segments_with_entities": 770,
+    "total_entities": 2017,
+    "unique_entities": 224,
+    "avg_entities_per_segment": 2.619,
+    "processing_time_seconds": 0.03
+  }
+}
