@@ -10,6 +10,8 @@ from typing import Any, Dict, Iterable, List, Set, Iterator
 import networkx as nx
 import spacy
 from pypdf import PdfReader
+from spacy.language import Language
+from spacy.tokens import Doc
 
 # Paths and defaults
 RAW_DIR = Path("data/raw")
@@ -19,10 +21,111 @@ LOG_PATH = OUTPUT_DIR / "pipeline.log"
 
 DEFAULT_SPACY_MODEL = "pt_core_news_sm"
 MODEL_CANDIDATES = ["pt_core_news_lg", "pt_core_news_sm"]
-ENTITIES_PER_DOC = 20
-FILE_LIMIT = 25
-FILTER_LABELS = {"PERSON", "PER", "ORG", "GPE", "LOC"}
+ENTITIES_PER_DOC = 40
+FILE_LIMIT = 1
+FILTER_LABELS = {
+    "PERSON",
+    "PER",
+    "ORG",
+    "GPE",
+    "LOC",
+    "NORP",
+    "LOC",
+    "PRODUCT",
+    "EVENT",
+    "WORK_OF_ART",
+    "LAW",
+    "MISC",
+}
 CHAR_BLOCK_SIZE = 2000
+
+
+# Hugging Face NER wrapper: integrate a HF token-classification pipeline
+# as a spaCy pipeline component. The heavy `transformers` import is
+# performed lazily inside the wrapper so the module can still be imported
+# if `transformers` is not installed; main() will fall back to spaCy models.
+class HuggingFaceNERWrapper:
+    def __init__(self, nlp: Language, name: str, model_name: str):
+        self.name = name
+        self.model_name = model_name
+        log_message(f"[INFO] Initializing Hugging Face NER pipeline: {model_name}")
+        try:
+            from transformers import pipeline as _hf_pipeline
+
+            self.hf_pipeline = _hf_pipeline(
+                task="token-classification",
+                model=model_name,
+                tokenizer=model_name,
+                aggregation_strategy="simple",
+            )
+        except Exception as e:
+            # Re-raise with context so callers can decide to fallback.
+            raise RuntimeError(
+                f"Failed to initialize Hugging Face pipeline: {e}"
+            ) from e
+
+    def __call__(self, doc: Doc) -> Doc:
+        # Run inference over the document text and map HF character offsets
+        # back to spaCy spans when possible.
+        hf_predictions = self.hf_pipeline(doc.text)
+        spans = []
+        for ent in hf_predictions:
+            start_raw = ent.get("start")
+            end_raw = ent.get("end")
+            if start_raw is None or end_raw is None:
+                continue
+            try:
+                start = int(start_raw)
+                end = int(end_raw)
+            except Exception:
+                # Skip non-integer offsets
+                continue
+            label_raw = ent.get("entity_group") or ent.get("entity")
+            label = label_raw if label_raw is not None else ""
+            span = doc.char_span(start, end, label=label)
+            if span is not None:
+                spans.append(span)
+        doc.ents = spans
+        return doc
+
+
+def create_hf_ner_wrapper(
+    nlp: Language, name: str, model_name: str = "Babelscape/wikineural-multilingual-ner"
+):
+    return HuggingFaceNERWrapper(nlp, name, model_name)
+
+
+if not Language.has_factory("hf_ner_wrapper"):
+    Language.factory(
+        "hf_ner_wrapper",
+        default_config={"model_name": "Babelscape/wikineural-multilingual-ner"},
+        func=create_hf_ner_wrapper,
+    )
+
+
+def build_hf_nlp(
+    model_name: str = "Babelscape/wikineural-multilingual-ner",
+) -> spacy.language.Language:
+    nlp = spacy.blank("xx")
+    # Add hugging-face wrapper
+    nlp.add_pipe("hf_ner_wrapper", config={"model_name": model_name})
+    # Ensure sentence boundaries: try statistical senter then fallback to sentencizer
+    try:
+        nlp.add_pipe("senter")
+        try:
+            nlp.initialize()
+        except Exception:
+            if "senter" in nlp.pipe_names:
+                try:
+                    nlp.remove_pipe("senter")
+                except Exception:
+                    pass
+            if "sentencizer" not in nlp.pipe_names:
+                nlp.add_pipe("sentencizer")
+    except Exception:
+        if "sentencizer" not in nlp.pipe_names:
+            nlp.add_pipe("sentencizer")
+    return nlp
 
 
 def ensure_dirs() -> None:
@@ -53,6 +156,44 @@ def clean_text(text: str) -> str:
 
 
 def extract_pdf_text(pdf_path: Path) -> str:
+    # Check for previously extracted text to avoid re-processing the same PDF.
+    # Validate cache before trusting it (mtime and minimal length).
+    raw_texts_dir = PROCESSED_DIR / "raw_texts"
+    raw_texts_dir.mkdir(parents=True, exist_ok=True)
+    cached_path = raw_texts_dir / f"{pdf_path.stem}.txt"
+    if cached_path.exists():
+        try:
+            text = cached_path.read_text(encoding="utf-8")
+            if text and text.strip():
+                text_stripped = text.strip()
+                cache_ok = True
+                # If cache is older than PDF, re-extract.
+                try:
+                    pdf_mtime = pdf_path.stat().st_mtime
+                    cache_mtime = cached_path.stat().st_mtime
+                    if cache_mtime < pdf_mtime:
+                        log_message(
+                            f"[INFO] Cache for {pdf_path.name} is older than PDF, re-extracting."
+                        )
+                        cache_ok = False
+                except Exception:
+                    # If we can't stat files, continue with a conservative heuristic.
+                    pass
+                # Heuristic: avoid using suspiciously short cached texts (likely placeholder).
+                MIN_ACCEPT_LEN = 100
+                if cache_ok and len(text_stripped) >= MIN_ACCEPT_LEN:
+                    log_message(
+                        f"[INFO] Using cached extracted text for {pdf_path.name}"
+                    )
+                    return text
+                else:
+                    log_message(
+                        f"[WARN] Cached text for {pdf_path.name} seems too short (len={len(text_stripped)}); re-extracting."
+                    )
+        except Exception:
+            # fallthrough to re-extract if reading cache fails
+            pass
+
     pages: List[str] = []
     try:
         reader = PdfReader(str(pdf_path))
@@ -63,9 +204,19 @@ def extract_pdf_text(pdf_path: Path) -> str:
     except Exception as e:
         log_message(f"[ERROR] Failed reading {pdf_path.name}: {e}")
         return ""
+
     # Join pages with blank-line separators so paragraph boundaries
     # can be preserved during cleaning.
-    return clean_text("\n\n".join(pages))
+    extracted = clean_text("\n\n".join(pages))
+
+    # Cache the extracted text for future runs (best-effort)
+    try:
+        with cached_path.open("w", encoding="utf-8") as f:
+            f.write(extracted)
+    except Exception as e:
+        log_message(f"[WARN] Could not cache extracted text for {pdf_path.name}: {e}")
+
+    return extracted
 
 
 def load_raw_pdfs(raw_dir: Path = RAW_DIR) -> Iterator[Dict[str, Any]]:
@@ -117,6 +268,7 @@ def extract_limited_entities_from_doc(
 ) -> Set[str]:
     ents_ordered: List[str] = []
     for ent in getattr(doc, "ents", []) or []:
+        print(ent, ent.label_)
         text = getattr(ent, "text", "")
         if not text or not text.strip():
             continue
@@ -318,7 +470,15 @@ def main() -> None:
     except FileNotFoundError as exc:
         log_message(f"[ERROR] {exc}")
         return
-    nlp = choose_nlp_model()
+    # Prefer Hugging Face NER pipeline; fallback to spaCy model if HF fails
+    try:
+        nlp = build_hf_nlp()
+        log_message("[INFO] Using Hugging Face NER pipeline (hf_ner_wrapper).")
+    except Exception as e:
+        log_message(
+            f"[WARN] HF pipeline init failed: {e}. Falling back to spaCy models."
+        )
+        nlp = choose_nlp_model()
     # Create one graph per segmentation strategy so we can export
     # co-occurrence networks for sentences, paragraphs and k-char blocks.
     graphs: Dict[str, nx.Graph] = {
