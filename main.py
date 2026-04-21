@@ -19,7 +19,7 @@ PROCESSED_DIR = Path("data/processed")
 OUTPUT_DIR = Path("output")
 LOG_PATH = OUTPUT_DIR / "pipeline.log"
 
-DEFAULT_SPACY_MODEL = "pt_core_news_sm"
+DEFAULT_SPACY_MODEL = "pt_core_news_lg"
 MODEL_CANDIDATES = ["pt_core_news_lg", "pt_core_news_sm"]
 ENTITIES_PER_DOC = 40
 FILE_LIMIT = 1
