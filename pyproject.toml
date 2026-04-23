@@ -5,15 +5,18 @@ description = "Add your description here"
 readme = "README.md"
 requires-python = ">=3.14"
 dependencies = [
+    "asttokens>=3.0.1",
     "certifi==2026.2.25",
     "charset-normalizer==3.4.7",
     "idna==3.11",
-    "matplotlib==3.8.0",
+    "ipykernel>=7.2.0",
+    "matplotlib>=3.10.8",
     "networkx==3.1",
     "nougat-ocr>=0.1.17",
     "pip>=26.0.1",
     "pypdf==6.10.0",
     "pytest==8.4.2",
+    "seaborn>=0.13.2",
     "spacy>=3.8.13",
     "torch>=2.11.0",
 ]

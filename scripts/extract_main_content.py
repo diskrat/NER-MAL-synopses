@@ -108,6 +108,25 @@ def normalize_whitespace(text: str) -> str:
 HEADING_RE = re.compile(r"(?m)^(#{1,6}\s*.*)$")
 
 
+RE_SETEXT_UNDERLINE = re.compile(r"(?m)^(.+?)\n[=-]{2,}\s*$")
+
+
+def remove_markdown_headings(text: str) -> str:
+    """Remove markdown heading lines (ATX `#`) and setext-style underlined headings.
+
+    Keeps the following paragraph text; collapses multiple blank lines to one.
+    """
+    if not text:
+        return text
+    t = text
+    # remove ATX headings like '# Heading' up to '######'
+    t = re.sub(r"(?m)^\s{0,3}#{1,6}\s+.*$", "", t)
+    # normalize whitespace and collapse blank lines
+    t = re.sub(r"(?m)^[ \t]+|[ \t]+$", "", t)
+    t = re.sub(r"\n{3,}", "\n\n", t)
+    return t.strip()
+
+
 def clean_preserve_structure(
     text: str, keep_inline_math: bool = False, convert_html_tables: bool = False
 ) -> str:
@@ -270,16 +289,22 @@ def process_file(
     cleaned_md = trim_to_summary_and_intro(cleaned_md)
     # ensure any REFERENCES section (with or without heading markdown) is removed
     cleaned_md = remove_references_section(cleaned_md)
+    # remove headings to keep only plain text in outputs
+    cleaned_no_headings = remove_markdown_headings(cleaned_md)
     doc_id = path.stem
     out_dir.mkdir(parents=True, exist_ok=True)
     # write per-file markdown preserving headings/structure
     md_path = out_dir / f"{doc_id}.md"
     # include a small header referencing source path and write cleaned markdown preserving headings
-    md_content = f"<!-- source: {path} -->\n\n" + cleaned_md
-    md_path.write_text(md_content, encoding="utf-8")
+    md_path.write_text(cleaned_no_headings, encoding="utf-8")
     # append to jsonl
     jsonl_path = out_dir / "clean_texts.jsonl"
-    record = {"id": doc_id, "path": str(path), "summary": summary, "body": cleaned_md}
+    record = {
+        "id": doc_id,
+        "path": str(path),
+        "summary": summary,
+        "body": cleaned_no_headings,
+    }
     with jsonl_path.open("a", encoding="utf-8") as fh:
         fh.write(json.dumps(record, ensure_ascii=False) + "\n")
     return record

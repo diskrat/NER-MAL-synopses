@@ -16,6 +16,7 @@ import time
 import re
 
 import networkx as nx
+from collections import Counter
 
 
 def load_spacy_model(name: str):
@@ -57,6 +58,7 @@ FILTER_LABELS = {
 }
 ENTITIES_PER_DOC = 40
 CHAR_BLOCK_SIZE = 500
+K_CHAR_SIZES = [200, 400, 600, 800, 1000, 1200, 1400, 1600, 1800, 2000]
 
 
 def log_message(msg: str) -> None:
@@ -236,11 +238,10 @@ def main(argv=None) -> None:
             pass
 
     # Prepare pipeline accumulators similar to main.py
-    graphs: Dict[str, nx.Graph] = {
-        "sentence": nx.Graph(),
-        "paragraph": nx.Graph(),
-        "k_chars": nx.Graph(),
-    }
+    graphs: Dict[str, nx.Graph] = {"sentence": nx.Graph(), "paragraph": nx.Graph()}
+    # add one graph per k-char size
+    for k in K_CHAR_SIZES:
+        graphs[f"k_chars_{k}"] = nx.Graph()
     entities_path = PROCESSED_DIR / "entities.jsonl"
     if entities_path.exists():
         try:
@@ -248,8 +249,9 @@ def main(argv=None) -> None:
         except Exception:
             pass
 
-    metrics_acc: Dict[str, Any] = {
-        name: {
+    metrics_acc: Dict[str, Any] = {}
+    for name in ("sentence", "paragraph"):
+        metrics_acc[name] = {
             "documents_processed": 0,
             "segments_total": 0,
             "segments_with_entities": 0,
@@ -257,8 +259,15 @@ def main(argv=None) -> None:
             "unique_entities": set(),
             "processing_time_seconds": 0.0,
         }
-        for name in ("sentence", "paragraph", "k_chars")
-    }
+    for k in K_CHAR_SIZES:
+        metrics_acc[f"k_chars_{k}"] = {
+            "documents_processed": 0,
+            "segments_total": 0,
+            "segments_with_entities": 0,
+            "total_entities": 0,
+            "unique_entities": set(),
+            "processing_time_seconds": 0.0,
+        }
 
     processed_count = 0
     for doc_obj in iter_documents(inp):
@@ -283,19 +292,17 @@ def main(argv=None) -> None:
         )
 
         # per-strategy accumulators
-        seen_in_doc: Dict[str, Set[str]] = {
-            name: set() for name in ("sentence", "paragraph", "k_chars")
-        }
+        seen_in_doc: Dict[str, Set[str]] = {name: set() for name in graphs.keys()}
         sentence_segments = [
             s.text.strip() for s in getattr(doc, "sents", []) if s.text.strip()
         ]
         paragraph_segments = segment_text_by_paragraph(text)
-        kchar_segments = segment_text_by_char_blocks(text)
-        segments_map = {
-            "sentence": sentence_segments,
-            "paragraph": paragraph_segments,
-            "k_chars": kchar_segments,
-        }
+        segments_map = {"sentence": sentence_segments, "paragraph": paragraph_segments}
+        # add one k_chars segmentation per configured block size
+        for k in K_CHAR_SIZES:
+            segments_map[f"k_chars_{k}"] = segment_text_by_char_blocks(
+                text, block_size=k
+            )
 
         for name, segments in segments_map.items():
             start = time.perf_counter()
@@ -330,30 +337,36 @@ def main(argv=None) -> None:
 
     log_message(f"[INFO] Processed {processed_count} documents from {inp}")
 
-    # Save graphs and metrics
+    # Save graphs and compute degree distributions
+    degree_distributions: Dict[str, Dict[int, int]] = {}
     for name, G in graphs.items():
         out_path = OUTPUT_DIR / f"graph_{name}.gexf"
         save_graph_gexf(G, out_path)
+        # compute degree distribution: degree -> count
+        degs = [d for _, d in G.degree()]
+        # produce an ordered mapping degree -> count (sorted by degree)
+        degree_counts = dict(sorted(Counter(degs).items()))
+        degree_distributions[name] = degree_counts
 
-    save_json(
-        {
-            k: {
-                "documents_processed": v["documents_processed"],
-                "segments_total": v["segments_total"],
-                "segments_with_entities": v["segments_with_entities"],
-                "total_entities": v["total_entities"],
-                "unique_entities": len(v["unique_entities"]),
-                "avg_entities_per_segment": (
-                    round(v["total_entities"] / v["segments_with_entities"], 3)
-                    if v["segments_with_entities"]
-                    else 0.0
-                ),
-                "processing_time_seconds": round(v["processing_time_seconds"], 3),
-            }
-            for k, v in metrics_acc.items()
-        },
-        PROCESSED_DIR / "performance_metrics.json",
-    )
+    # compose final metrics including degree distributions
+    final_metrics = {}
+    for k, v in metrics_acc.items():
+        final_metrics[k] = {
+            "documents_processed": v["documents_processed"],
+            "segments_total": v["segments_total"],
+            "segments_with_entities": v["segments_with_entities"],
+            "total_entities": v["total_entities"],
+            "unique_entities": len(v["unique_entities"]),
+            "avg_entities_per_segment": (
+                round(v["total_entities"] / v["segments_with_entities"], 3)
+                if v["segments_with_entities"]
+                else 0.0
+            ),
+            "processing_time_seconds": round(v["processing_time_seconds"], 3),
+            "degree_distribution": degree_distributions.get(k, {}),
+        }
+
+    save_json(final_metrics, PROCESSED_DIR / "performance_metrics.json")
 
     log_message("[DONE] Pipeline finished")
 
