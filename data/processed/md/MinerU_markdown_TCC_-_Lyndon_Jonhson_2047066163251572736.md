@@ -1,0 +1,1299 @@
+# Um sistema de sensoriamento de uso de sistemas de refrigeração ambiente usando georreferenciamento
+
+Lyndon Jonhson Cabral Filho 
+
+Orientador: Prof. Dr. Agostinho de Medeiros Brito Junior 
+
+# Um sistema de sensoriamento de uso de sistemas de refrigeração ambiente usando georreferenciamento
+
+# Lyndon Jonhson Cabral Filho
+
+Orientador: Prof. Dr. Agostinho de Medeiros Brito Junior 
+
+Trabalho de Conclusão de Curso de Graduação na modalidade Monografia, submetido como parte dos requisitos necessários para conclusão do curso de Engenharia de Computação pela Universidade Federal do Rio Grande do Norte (UFRN/CT). 
+
+# Universidade Federal do Rio Grande do Norte - UFRN
+
+# Sistema de Bibliotecas - SISBI
+
+# Catalogação de Publicação na Fonte. UFRN - Biblioteca Central Zila Mamede
+
+Cabral Filho, Lyndon Jonhson. 
+
+Um sistema de sensoriamento de uso de sistemas de refrigeração ambiente usando georreferenciamento / Lyndon Jonhson Cabral Filho. - 2025. 
+
+65 f.: il. 
+
+Monografia (graduação) - Universidade Federal do Rio Grande do Norte, Centro de Tecnologia, Engenharia da Computação, Natal, RN, 2025. 
+
+Orientação: Prof. Dr. Agostinho de Medeiros Brito Junior. 
+
+1. Georreferenciamento - Monografia. 2. Sistemas de refrigeração ambiente - Monografia. 3. Gestão energética - Monografia. 4. Sistema web - Monografia. 5. Otimização de recursos - Monografia. I. Brito Junior, Agostinho de Medeiros. II. Título. 
+
+RN/UF/BCZM 
+
+CDU 004 
+
+# Um sistema de sensoriamento de uso de sistemas de refrigeração ambiente usando georreferenciamento
+
+Lyndon Jonhson Cabral Filho 
+
+Monografia aprovada em 1 de dezembro de 2025, pela banca examinadora composta pelos seguintes membros: 
+
+Prof. Dr. Agostinho de Medeiros Brito Junior (orientador) . . . . . . . DCA/UFRN 
+
+Prof. Dr. Fabio Meneghetti Ugulino de Araujo . . . . . . DCA/UFRN 
+
+Profª Drª Carla Wilza Souza de Paula Maitelli . . . CT/UFRN 
+
+# Agradecimentos
+
+À Deus, por tudo. 
+
+Aos meus pais, que fizeram o possível e o impossível para eu estar aqui. 
+
+À minha esposa, por me apoiar em todos os momentos. 
+
+Aos meus amigos, que sem eles meus dias não teriam sido tão divertidos. 
+
+# Resumo
+
+Este trabalho apresenta o desenvolvimento de um sistema de gestão e controle de sistemas de refrigeração ambiente com suporte a georreferenciamento, voltado para otimizar o uso desses equipamentos em grandes áreas e edificações. O problema abordado é o elevado consumo de energia decorrente do funcionamento desnecessário dos aparelhos, muitas vezes causado pela ausência de monitoramento em tempo real e de controle remoto eficiente. O principal objetivo foi implementar uma aplicação web, composta por back-end e front-end, capaz de receber, processar e exibir dados dos dispositivos de refrigeração ambiente em um mapa interativo, possibilitando também o controle remoto. O sistema foi desenvolvido em Java, utilizando o framework Spring Boot para o back-end e o Thymeleaf para a camada de apresentação. A interface permite visualizar a localização e o status de cada dispositivo (ligado/desligado, presença ou ausência de pessoas) por meio de marcadores coloridos. Os testes realizados demonstraram que a aplicação fornece informações precisas e permite intervenções ágeis, configurando-se como uma ferramenta eficaz para a gestão energética e contribuindo para edificações mais inteligentes e sustentáveis. 
+
+Palavras-chave: Georreferenciamento, Sistemas de refrigeração ambiente, Gestão energética, Sistema Web, Otimização de recursos. 
+
+# Abstract
+
+This work presents the development of a management and control system for ambient cooling systems with georeferencing support, aimed at optimizing the use of these devices in large areas and buildings. The problem addressed is the high energy consumption resulting from the unnecessary operation of the equipment, often caused by the lack of real-time monitoring and efficient remote control. The main objective was to implement a web application, consisting of a back-end and front-end, capable of receiving, processing, and displaying data from ambient cooling devices on an interactive map, also enabling remote control. The system was developed in Java, using the Spring Boot framework for the back-end and Thymeleaf for the presentation layer. The interface allows users to view the location and status of each device (on/off, presence or absence of people) through colored markers. The tests carried out demonstrated that the application provides accurate information and enables agile interventions, establishing itself as an effective tool for energy management and contributing to smarter and more sustainable buildings. 
+
+Keywords: Georeferencing, Ambient cooling systems, Energy Management, Web System, Resource Optimization. 
+
+# Sumário
+
+# Sumário i
+
+# Lista de Figuras iii
+
+# Lista de Abreviaturas e Siglas v
+
+# 1 Introdução 1
+
+1.1 Contextualização do Problema 2 
+
+1.2 Justificativa 5 
+
+1.3 Objetivos 5 
+
+1.4 Estrutura do Trabalho 6 
+
+# 2 Fundamentação Teórica 7
+
+2.1 Internet das Coisas (IoT) 7 
+
+2.2 Sistemas de Informação Geográfica (SIG) e Georreferenciamento 8 
+
+2.3 Leaflet: Biblioteca JavaScript para Mapas Interativos . 9 
+
+2.4 Java: Linguagem de Programação Orientada a Objetos 9 
+
+2.5 Ecossistema Spring: Coleção de Frameworks e Módulos Java . . . . 10 
+
+2.5.1 Spring Web: Módulo para Aplicações Web . . . . 10 
+
+2.5.2 Spring Boot: Framework para Simplificação do Spring . . . . . . 10 
+
+2.5.3 Spring Data JPA: Módulo para Persistência de Dados . . . . . . . 11 
+
+2.5.4 Spring Security: Framework para Autenticação e Autorização . . 11 
+
+2.6 Arquitetura MVC 11 
+
+2.7 Apache Maven: Ferramenta de Gerenciamento de Projetos e Build . . . . 12 
+
+2.8 PostgreSQL: Sistema Gerenciador de Banco de Dados Objeto-Relacional 12 
+
+2.9 Flyway: Ferramenta de Migração de Banco de Dados . . 12 
+
+2.10 HTML: Linguagem de Marcação de Hipertexto 13 
+
+2.11 CSS: Folhas de Estilo em Cascata 13 
+
+2.12 JavaScript: Linguagem de Programação para a Web . 13 
+
+2.13 Thymeleaf: Motor de Template do Lado do Servidor 14 
+
+2.14 Lombok: Biblioteca para Redução de Código Boilerplate em Java . . . . 14 
+
+2.15 Bean Validation: Especificação para Validação de Modelos . . 14 
+
+2.16 Git/GitHub: Controle de Versão e Plataforma de Hospedagem 15 
+
+2.17 Trabalhos Relacionados . 15 
+
+# 3 Implementação 17
+
+3.1 Definições iniciais . 17 
+
+3.2 Dispositivo de hardware 18 
+
+3.3 Sistema web . 19 
+
+3.4 Interface e funcionalidades 26 
+
+# 4 Experimentos e Resultados 35
+
+4.1 Metodologia Experimental 35 
+
+4.2 Apresentação dos Resultados . . 36 
+
+4.2.1 Visualização e controle de permissões . . . . 36 
+
+4.2.2 Teste de georreferenciamento . . 38 
+
+4.2.3 Teste de mudança de estado dos dispositivos 39 
+
+4.2.4 Geração e exportação do histórico de atividades . . . . . . . . . . 41 
+
+4.3 Análise e Discussão dos Resultados 41 
+
+# 5 Conclusão 43
+
+# Referências bibliográficas 45
+
+# Lista de Figuras
+
+3.1 Fluxo de dados do sistema . . . . 18 
+
+3.2 Diagrama entidade-relacionamento . . . . 20 
+
+3.3 Migrações criadas no projeto 22 
+
+3.4 Estrutura em camadas do projeto . . 23 
+
+3.5 Tela de login 26 
+
+3.6 Tela de cadastro 26 
+
+3.7 Tela de recuperação de senha . . . 27 
+
+3.8 Tela de redefinição de senha . . 27 
+
+3.9 Tela inicial do sistema 28 
+
+3.10 Opções do usuário no cabeçalho 28 
+
+3.11 Mapa interativo com dispositivos georreferenciados . . . . . . 29 
+
+3.12 Popup com informações e ações do dispositivo 29 
+
+3.13 Tela de histórico de funcionamento dos dispositivos . . . 30 
+
+3.14 Tela de administração de zonas . . . 31 
+
+3.15 Formulário de cadastro de zona . . 31 
+
+3.16 Tela de administração de permissões . . . 32 
+
+3.17 Edição de permissões de usuários . . . 32 
+
+4.1 Tela de visualização do mapa durante os testes . . . 37 
+
+4.2 Dispositivos registrados no banco de dados 37 
+
+4.3 Localização do dispositivo no mapa do sistema 38 
+
+4.4 Localização do mesmo dispositivo no Google Maps . . 38 
+
+4.5 Dispositivo de teste visualizado no mapa . . . 39 
+
+4.6 Informações detalhadas do dispositivo de teste . . 39 
+
+4.7 Dados retornados para atualização do estado do dispositivo . . 40 
+
+4.8 Dispositivo após atualização do estado para “desligado” . . 40 
+
+4.9 Histórico de atividades do dispositivo de teste . . 41 
+
+4.10 Arquivo CSV gerado com o histórico de uso . . . 41 
+
+# Lista de Abreviaturas e Siglas
+
+UFRN Universidade Federal do Rio Grande do Norte 
+
+IoT Internet of Things 
+
+HTML Hypertext Markup Language 
+
+CSS Cascading Style Sheets 
+
+JS JavasSript 
+
+STI Superintendência de Tecnologia da Informação da UFRN 
+
+SIG Sistemas de Informação Geográfica 
+
+LoRa Long Range 
+
+MQTT Message Queuing Telemetry Transport 
+
+GPS Global Positioning System 
+
+PIR Passive Infrared Sensor 
+
+JPA Java Persistence API 
+
+# Capítulo 1
+
+# Introdução
+
+O presente Trabalho de Conclusão de Curso apresenta o desenvolvimento de um sistema web voltado ao monitoramento e controle de aparelhos de refrigeração ambiente em grandes edificações públicas. O objetivo principal é proporcionar uma gestão mais eficiente e inteligente desses equipamentos, contribuindo para a otimização do consumo energético. 
+
+Com o aumento das temperaturas médias globais, especialmente em regiões tropicais, o uso de sistemas de climatização tornou-se indispensável em instituições públicas de saúde, educação e administração. Entretanto, o uso indiscriminado desses equipamentos tem provocado um aumento expressivo no consumo de energia elétrica. Esse cená- rio evidencia a necessidade de ferramentas que possibilitem um controle mais racional e automatizado do uso dos aparelhos de refrigeração ambiente, com um foco crucial na necessidade de monitoramento contínuo. Esse monitoramento é essencial para otimizar o uso energético, tornado-o mais sustentável e, principalmente, mais racional, garantindo o conforto necessário sem desperdício de recursos. 
+
+A proposta deste trabalho consiste no desenvolvimento de uma solução tecnológica baseada em sensoriamento remoto e georreferenciamento, capaz de monitorar o estado de funcionamento dos equipamentos (ligado/desligado, presença de pessoas e localização) e permitir o controle remoto centralizado. Com isso, busca-se oferecer uma visão abrangente e em tempo real do uso desses dispositivos, viabilizando decisões rápidas e ações 
+
+de manutenção mais eficazes. 
+
+# 1.1 Contextualização do Problema
+
+O gerenciamento de recursos em instituições públicas é uma tarefa complexa, especialmente quando envolve infraestrutura de grande porte e a necessidade de conforto térmico. Hospitais, universidades e órgãos administrativos utilizam sistemas de climatização intensivamente, e os aparelhos de refrigeração ambiente representam uma das maiores parcelas do consumo energético dessas instituições. 
+
+O problema torna-se mais crítico quando não há um controle eficiente sobre o uso desses aparelhos. É comum que permaneçam ligados mesmo em ambientes desocupados, gerando desperdício de energia e custos adicionais. Na Universidade Federal do Rio Grande do Norte (UFRN), por exemplo, a ampla distribuição de equipamentos de refrigeração ambiente dificulta identificar quais estão em uso indevido ou necessitam de manutenção. 
+
+Nesse contexto, a integração entre sensoriamento remoto e georreferenciamento surge como uma solução promissora. O sensoriamento permite o monitoramento automático das condições de uso e do estado dos equipamentos, enquanto o georreferenciamento fornece uma representação visual e intuitiva desses dados. Juntas, essas tecnologias possibilitam o controle remoto e inteligente dos aparelhos, otimizando o tempo de resposta e reduzindo o consumo energético. 
+
+# Análise da Situação Atual em Instituições Públicas
+
+A temperatura média global tem apresentado incremento contínuo ao longo das últimas décadas. Conforme reportado pelo (Jornal da USP, 2025), o período de 2015 a 2024 foi o mais quente já registrado. Esse aquecimento acentua a demanda por climatização em 
+
+edificações públicas, como hospitais, escolas e prédios administrativos, onde o conforto térmico é requisito para a continuidade das atividades e para a manutenção de condições adequadas de trabalho e prestação de serviços. 
+
+Além do conforto humano, a climatização controlada é essencial para garantir a integridade de equipamentos sensíveis e a estabilidade de materiais de consumo em ambientes como laboratórios de pesquisa e hospitais. Muitos reagentes químicos, amostras biológicas, medicamentos termo-sensíveis e líquidos inflamáveis exigem condições de temperatura estritamente controladas para manter suas propriedades, eficácia ou segurança. 
+
+Na prática, a solução frequentemente adotada consiste na instalação de múltiplos aparelhos de refrigeração ambiente para atender às diferentes demandas ambientais. Contudo, sem uma gestão adequada, esses equipamentos tornam-se responsáveis por parcela substancial dos gastos operacionais das instituições. Estudos indicam que, em determinados cenários, a adoção generalizada de sistemas de climatização pode elevar intensamente o consumo energético — por exemplo, (GERALDI et al., 2021) apontam um aumento significativo na intensidade de consumo energético em escolas brasileiras após a implementação massiva de aparelhos de ar-condicionado. 
+
+O elevado consumo não decorre apenas do número de aparelhos instalados; a ausência de práticas de gestão e monitoramento contribui de maneira decisiva para o desperdício. Situações típicas incluem aparelhos ligados desnecessariamente, falta de supervisão em tempo real e ausência de um histórico de utilização que permita identificar unidades com consumo anômalo. Ademais, a dificuldade de localização e a carência de dados para priorização de manutenção geram custos adicionais e reduzem a eficiência operacional. 
+
+# Formulação do Problema
+
+Como integrar sensores remotos e georreferenciamento a um sistema centralizado de gestão de refrigeração ambiente, de modo a otimizar a manutenção, reduzir o consumo 
+
+energético e fornecer dados históricos e operacionais que suportem a tomada de decisão nas instituições públicas? 
+
+# Proposta de Solução - Visão Geral
+
+Propõe-se o desenvolvimento de um sistema web centralizado que receba dados em tempo real provenientes de sensores associados a cada aparelho de refrigeração. A solu-ção contempla, em alto nível, os seguintes módulos: 
+
+• Aquisição de dados (sensoriamento): sensores de presença, temperatura, vibração e posicionamento (georreferenciamento) acoplados aos equipamentos ou às suas proximidades; 
+
+• Transmissão: camada de comunicação que garante o envio seguro e confiável das leituras ao servidor central (por exemplo, protocolos IoT leves sobre TLS); 
+
+• Processamento e armazenamento: servidor/aplicação que valida, processa e persiste os eventos em um banco de dados, permitindo consulta histórica e geração de relatórios; 
+
+• Interface de visualização (dashboard): painel web com mapa interativo que posiciona cada aparelho por marcador colorido (cada cor representa um status operacional), listagens de histórico (pares ligar/desligar para cálculo de tempo de uso) e mecanismos de controle remoto conforme os níveis de permissão do usuário; 
+
+• Controle de acesso e zonas: identificação dos dispositivos por nome e zona (ex.: Setor 1, Setor 2) e gestão de permissões para que usuários visualizem e operem apenas os equipamentos de sua área de atuação. 
+
+A implementação proposta visa oferecer às instituições públicas uma ferramenta de monitoramento contínuo, priorização de manutenção e ação remota sobre os aparelhos, reduzindo desperdício energético e custos operacionais. Recomenda-se que as ilustra-
+
+ções da arquitetura sejam produzidas em formato vetorial (por exemplo, PDF gerado por Inkscape) para inserção no documento. 
+
+# 1.2 Justificativa
+
+A relevância deste trabalho manifesta-se em dois âmbitos principais: o acadêmico/- tecnológico e o socioeconômico. 
+
+No campo acadêmico e tecnológico, o projeto contribui para a área da Engenharia da Computação ao propor a integração de sistemas web, dispositivos sensores e georreferenciamento em uma solução prática e aplicável. Essa abordagem permite o estudo e a implementação de tecnologias da Internet das Coisas (IoT) voltadas à automação e eficiência energética, com potencial de expansão para outras aplicações. 
+
+No aspecto socioeconômico, o projeto busca racionalizar o sistema de climatização, além de reduzir o desperdício de energia elétrica em instituições públicas, promovendo sustentabilidade e economia de recursos públicos. O controle racional do uso dos aparelhos de refrigeração ambiente pode gerar economias significativas ao longo dos anos, permitindo o redirecionamento de recursos para atividades-fim das instituições, como ensino, pesquisa e atendimento à população. 
+
+Dessa forma, o desenvolvimento desta ferramenta tecnológica apresenta benefícios diretos tanto para o meio acadêmico quanto para a sociedade, demonstrando sua relevância prática e científica. 
+
+# 1.3 Objetivos
+
+O objetivo geral deste trabalho é desenvolver e avaliar um sistema de sensoriamento e controle de equipamentos de refrigeração ambiente georreferenciado para instituições públicas, com foco na otimização do consumo energético. 
+
+Os objetivos específicos incluem: 
+
+• Projetar a arquitetura do sistema web, definindo os módulos de comunicação com sensores, tratamento de dados e interfaces de usuário; 
+
+• Implementar o sistema web, integrando front-end e back-end, para o recebimento, processamento e exibição das informações coletadas pelos sensores; 
+
+• Integrar o sistema a um módulo de georreferenciamento que permita a visualização espacial dos aparelhos e de seus estados operacionais; 
+
+• Validar o funcionamento do sistema por meio de testes de comunicação, controle remoto e atualização em tempo real; 
+
+• Avaliar a eficiência da solução proposta quanto à sua capacidade de reduzir o consumo energético e facilitar a gestão dos equipamentos. 
+
+# 1.4 Estrutura do Trabalho
+
+Este trabalho está organizado em seis capítulos, descritos a seguir: 
+
+• Capítulo 2: apresenta a fundamentação teórica sobre as tecnologias utilizadas, incluindo Internet das Coisas (IoT), sistemas web e georreferenciamento, além de revisar trabalhos relacionados; 
+
+• Capítulo 3: detalha o processo de implementação do sistema web, abrangendo a comunicação com sensores, o processamento dos dados e a interface de usuário; 
+
+• Capítulo 4: apresenta os experimentos realizados, os resultados obtidos e sua aná- lise; 
+
+• Capítulo 5: reúne as conclusões do trabalho, destacando as contribuições alcançadas e sugerindo melhorias e trabalhos futuros. 
+
+# Capítulo 2
+
+# Fundamentação Teórica
+
+# 2.1 Internet das Coisas (IoT)
+
+A Internet das Coisas (Internet of Things – IoT) é um conceito que consiste na interconexão de objetos do cotidiano — além de smartphones e computadores — por meio da internet ou de outras formas de comunicação, possibilitando o compartilhamento de informações sem a necessidade de intervenção humana direta (BRASIL, 2023). 
+
+Essas informações são fundamentais para a tomada de decisão, seja ela humana ou automatizada. Nesse contexto, os sensores desempenham um papel essencial, pois permitem que os dispositivos obtenham dados do ambiente. Sensores de temperatura, umidade, presença e consumo de energia são particularmente relevantes para este trabalho, uma vez que possibilitam identificar a presença de pessoas no ambiente e verificar se os aparelhos de refrigeração ambiente estão ligados e consumindo energia desnecessariamente. 
+
+A comunicação entre esses dispositivos pode ocorrer de diversas formas, como por meio da internet (Wi-Fi ou cabeamento), Bluetooth, LoRa, MQTT, entre outros (ONO-MONDO, 2023). Para o escopo deste projeto, contudo, uma comunicação simples entre os dispositivos e o sistema processador de dados é suficiente, podendo ser realizada via Wi-Fi. A implementação torna-se ainda mais simples quando os dispositivos e o sistema estão conectados à mesma rede local, reduzindo a exposição direta à internet. 
+
+# 2.2 Sistemas de Informação Geográfica (SIG) e Georre-
+
+# ferenciamento
+
+De acordo com (BARROS, 2025), “um SIG não é apenas um software, mas um sistema composto por dados, hardware, pessoas, metodologias e, evidentemente, o software”. Esses elementos atuam de forma integrada na análise e visualização de dados geográficos e descritivos. 
+
+Os Sistemas de Informação Geográfica realizam a coleta, o armazenamento, a aná- lise e a visualização de dados, frequentemente representados por mapas e gráficos. Essa informação espacial é de grande importância para este trabalho, pois permite identificar visualmente a localização dos dispositivos de refrigeração ambiente e aqueles que necessitam de intervenção (BARROS, 2025). 
+
+Existem diversas tecnologias de georreferenciamento, como GPS, triangulação via Wi-Fi ou Bluetooth, entre outras. No contexto de instituições públicas de grande extensão, a localização precisa dos ativos facilita a gestão e a manutenção, proporcionando maior agilidade e eficiência (Geo sem Fronteiras, 2024). 
+
+Neste projeto, não há necessidade de utilização de módulos de posicionamento (como GPS) nos dispositivos sensores. A localização dos aparelhos pode ser definida de forma simples durante a instalação, por meio do armazenamento local das coordenadas geográ- ficas. Essa configuração pode ser realizada com o auxílio de um smartphone conectado ao dispositivo via Bluetooth ou Wi-Fi, fornecendo sua latitude e longitude. Assim, cada unidade de refrigeração ambiente terá sua posição registrada e enviada ao sistema juntamente com os dados sensoriais, permitindo sua visualização em um mapa interativo — uma solução eficiente e de baixo custo. 
+
+# 2.3 Leaflet: Biblioteca JavaScript para Mapas Interati-
+
+# vos
+
+Como mencionado anteriormente, o georreferenciamento é um componente essencial deste projeto. Para implementar o mapa interativo que representa cada dispositivo de refrigeração ambiente, exibindo seu status e possibilitando o controle remoto, foi utilizada a biblioteca JavaScript Leaflet (versão 1.9.4). 
+
+O Leaflet é uma biblioteca de código aberto, leve e de alto desempenho, voltada à criação de mapas interativos. Ele opera em conjunto com provedores de mapas de terceiros, como OpenStreetMap (o mais utilizado) e Mapbox, oferecendo flexibilidade na escolha da fonte cartográfica. A biblioteca possibilita a adição de marcadores, pop-ups, controles de zoom e movimentação, funcionalidades essenciais para a interface do sistema (LEA-FLET, 2025). 
+
+# 2.4 Java: Linguagem de Programação Orientada a Objetos
+
+O Java é uma linguagem de programação orientada a objetos, fortemente tipada, criada pela Sun Microsystems em 1995 e atualmente mantida pela Oracle Corporation. Reconhecida por sua segurança, portabilidade e robustez, é uma das linguagens mais utilizadas no mundo, executando mais de 73 bilhões de máquinas virtuais Java (JVMs) em operação globalmente (ORACLE, 2025). 
+
+A escolha do Java para o desenvolvimento deste sistema justifica-se pela ampla ado-ção da linguagem em sistemas corporativos e institucionais, incluindo aplicações administrativas e acadêmicas da Universidade Federal do Rio Grande do Norte (UFRN). Além disso, o autor possui experiência consolidada com a linguagem, o que contribuiu para o desenvolvimento eficiente da solução proposta. 
+
+# 2.5 Ecossistema Spring: Coleção de Frameworks e Mó- dulos Java
+
+O ecossistema Spring surgiu no início dos anos 2000 com o objetivo de reduzir a complexidade das aplicações corporativas em Java. Ele constitui um conjunto abrangente de frameworks e ferramentas que facilitam o desenvolvimento de aplicações seguras, escalá- veis e de manutenção simplificada (SPRING, 2025c). 
+
+Conforme (ANDRADE, 2020), o Spring era originalmente um único framework, mas seu crescimento levou à modularização, resultando na criação de diversos subprojetos integráveis, hoje conhecidos como o ecossistema Spring. O sistema desenvolvido neste trabalho utiliza alguns desses módulos, conforme detalhado a seguir. 
+
+# 2.5.1 Spring Web: Módulo para Aplicações Web
+
+O Spring Framework constitui o núcleo do ecossistema, oferecendo módulos essenciais como o Spring Core (injeção de dependência e inversão de controle), Spring MVC (para desenvolvimento web e APIs) e Spring Test (para testes unitários e de integração) (SPRING, 2025c). 
+
+# 2.5.2 Spring Boot: Framework para Simplificação do Spring
+
+O Spring Boot simplifica e agiliza a criação de aplicações Spring, automatizando a configuração inicial e eliminando a necessidade de arquivos XML extensos. Ele permite a criação de aplicações autônomas (standalone), integrando-se de forma fluida com os demais módulos do ecossistema (SPRING, 2025a). 
+
+# 2.5.3 Spring Data JPA: Módulo para Persistência de Dados
+
+O Spring Data JPA facilita a manipulação de dados em bancos relacionais, reduzindo o código repetitivo por meio de abstrações para operações comuns de persistência (CRUD), paginação e ordenação. Ele realiza o mapeamento entre classes Java e tabelas do banco de dados de forma automática (SPRING, 2025b). 
+
+# 2.5.4 Spring Security: Framework para Autenticação e Autorização
+
+O Spring Security provê recursos de autenticação, autorização e proteção contra ataques comuns em aplicações web, com suporte a protocolos modernos como OAuth2 e JWT. Sua integração nativa ao ecossistema Spring o torna uma solução robusta e amplamente adotada (SPRING, 2025d). 
+
+# 2.6 Arquitetura MVC
+
+O sistema foi desenvolvido com base na arquitetura MVC (Model–View–Controller), que promove a separação de responsabilidades e favorece a manutenção do código (SOUZA, 2023). 
+
+• Model (Modelo): camada responsável pela lógica de negócios e comunicação com o banco de dados. 
+
+• View (Visão): camada de interface com o usuário, responsável pela apresentação das informações. 
+
+• Controller (Controlador): camada intermediária que processa as requisições, interage com o modelo e define a visualização apropriada como resposta. 
+
+# 2.7 Apache Maven: Ferramenta de Gerenciamento de
+
+# Projetos e Build
+
+O Apache Maven é uma ferramenta amplamente utilizada em projetos Java para o gerenciamento de dependências e automação de construção (build). Foi criado com o objetivo de permitir que o desenvolvedor organize e construa projetos Java de forma eficiente, facilitando o gerenciamento de bibliotecas, o controle de versões e a padronização do processo de compilação (The Apache Software Foundation, 2025). 
+
+# 2.8 PostgreSQL: Sistema Gerenciador de Banco de Dados Objeto-Relacional
+
+O PostgreSQL é um dos Sistemas Gerenciadores de Banco de Dados (SGDB) objetorelacional de código aberto mais utilizados do mundo. ele é conhecido por ser muito robusto e ter uma alta confiabilidade e integridade de dados, oferece diversos recursos para ajudar no gerenciamento dos dados, independentemente do tamanho e quantidade. Muito utilizado em diversos projetos, comumente utilizado em projetos Java, sua documentação é muita boa e tem uma comunidade muito ativa (The PostgreSQL Global Development Group, 2025). 
+
+# 2.9 Flyway: Ferramenta de Migração de Banco de Dados
+
+O Flyway é uma ferramenta para versionar o banco de dados, utilizado em projetos para manter o banco de dados coerente com a versão do projeto e sem modificações externas. Ele faz todo o gerenciamento do banco com as migrations (migrações), que são scripts SQL para criar, editar e excluir tabelas e colunas do banco, recebendo toda e qualquer modificação do banco em suas migrations para manter o controle de versão 
+
+(SOFTWARE, 2025). 
+
+# 2.10 HTML: Linguagem de Marcação de Hipertexto
+
+O HTML é basicamente o esqueleto de toda página web, utilizando marcações (tags) para dar significado e estrutura ao texto. Cada tag tem um significado e diferentes funcionalidades para tornar o texto mais dinâmico e personalizável, padronizando todas as páginas da web para melhor organização (Mozilla Foundation, 2025b). 
+
+# 2.11 CSS: Folhas de Estilo em Cascata
+
+O CSS trabalha junto com o HTML, se o HTML é o esqueleto da página, o CSS é a aparência. Com o CSS é possível controlar, cores, fontes, responsividade, entre outras coisas de forma separada da estrutura HTML, separando os papéis de cada um em uma página web (Mozilla Foundation, 2025a). 
+
+# 2.12 JavaScript: Linguagem de Programação para a Web
+
+Para fechar o trio de página web junto com o HTML e o CSS, o Javascript (JS) é uma linguagem de programação que permite tornar as páginas web, que são estáticas, em páginas dinâmicas. Isto é, trazer animações que apenas com HTML e CSS são difíceis ou até mesmo impossíveis. O JS (JavaScript) é uma das linguagens de programação mais utilizada no mundo, justamente por ser utilizada em praticamente todas as páginas web (Mozilla Foundation, 2025c). 
+
+# 2.13 Thymeleaf: Motor de Template do Lado do Servidor
+
+O Thymeleaf é um mecanismo de template (template engine) para aplicações Java muito utilizado quando se quer criar páginas HTML dinâmicas no servidor. Isto é, ele permite criar páginas web (HTML, CSS e JS) com dados integrados do servidor (código Java) que saem prontas do servidor para serem mostradas ao usuário. Ele contém expressões dinâmicas que servem para trabalhar o layout das páginas web, adicionando os dados do servidor, iterando sobre listas, reutilização de fragmentos (componentes separados) para o layout, entre várias outras funcionalidades. Ele faz tudo isso e no fim entrega para o usuário uma página web com estrutura natural de HTML, CSS e JS, sem nenhum código thymeleaf presente (THYMELEAF, 2025). 
+
+# 2.14 Lombok: Biblioteca para Redução de Código Boilerplate em Java
+
+O Lombok é uma biblioteca utilizada na linguagem Java para reduzir a quantidade de código repetitivo dentro das classes. Ele utiliza anotações para gerar automaticamente os métodos padrões das classes Java, como os getters, setters, equals, hashcode e construtores (LOMBOK, 2025). 
+
+# 2.15 Bean Validation: Especificação para Validação de Modelos
+
+O Bean Validation é uma especificação Java que permite validar objetos utilizando anotações. Ela auxilia na validação de dados com algumas verificações já criadas para va-
+
+lidar dados e objetos, além de também permitir a criação de novas anotações para realizar todo tipo de validação necessária (Jakarta Bean Validation, 2025). 
+
+# 2.16 Git/GitHub: Controle de Versão e Plataforma de Hospedagem
+
+O Git é um sistema de controle de versões distribuído utilizado para gerenciar as alterações no código-fonte ao longo do tempo, permitindo o rastreamento do histórico de modificações e o trabalho colaborativo entre múltiplos desenvolvedores. Por meio do controle de versões, é possível manter a integridade do código e facilitar a recupera-ção de versões anteriores. O GitHub, por sua vez, é uma plataforma de hospedagem de repositórios baseada no Git, que possibilita o armazenamento, o compartilhamento e a colaboração em projetos de forma centralizada (ALURA, 2020). 
+
+# 2.17 Trabalhos Relacionados
+
+Existem vários projetos que tentam procurar maneiras automatizadas para controlar a climatização ou diminuir o custo energético de aparelhos elétricos. 
+
+Um projeto relacionado ao controle de climatização é o ThermTerm (DANILOC, 2025), que é uma solução que usa uma placa de baixo custo (ESP32) para conectar bombas térmicas com sistemas de casa inteligente como o Home Assistant. Esse aparelho foi feito para realizar o controle dos aparelhos de forma remota, porém é feito para automa-ção doméstica, tornando-o menos útil para ser usado em grandes instituições e edifícios públicos. 
+
+Relacionado com o custo energético, o projeto EMHASS (DAVIDUSB-GEEK, 2025) trabalha com o gerenciamento inteligente da energia residencial. Ele utiliza fórmulas matemáticas para considerar o preço da energia, geração de energia de painéis solares e 
+
+armazenamento de energia em baterias e pode ser integrado com o Home Assistant para controle disso. Apesar disso, ele também tem seu foco em automação doméstica. 
+
+O sistema desenvolvido nesse trabalho faz a ponte entre o controle de aparelhos de refrigeração ambiente e uma plataforma web robusta capaz de controla vários dispositivos em uma área grande de abrangência. Usando tecnologias corporativas como Java (Spring e Thymeleaf), o sistema permite um controle centralizado dos aparelhos com segurança, incluindo autenticação e controle de acesso, onde cada setor ou unidade administrativa só controlam os aparelhos que lhes pertencem. 
+
+E por fim, o outro projeto relevante e que serviu como base para o desenvolvimento do sistema, é o Projeto de Automação de um Ar-Condicionado com Arduíno Mediante Sensor de Presença (FURTUNATO, 2024). Ele utiliza um Arduíno com diversos sensores para captar as informações do ambiente e do aparelho de refrigeração ambiente para serem utilizadas para redução de consumo de energia. Junto com um sistema capaz de processar esses dados de forma centralizada, podem ser utilizados para redução de consumo energético de instituições públicas. 
+
+# Capítulo 3
+
+# Implementação
+
+Após a análise do problema enfrentado pelas instituições públicas e a definição dos requisitos necessários para solucioná-lo, o desenvolvimento do projeto foi organizado em etapas sequenciais. Inicialmente, definiu-se o fluxo de dados, partindo da captura de informações pelos sensores até a visualização pelo usuário final. Em seguida, foi projetado o protocolo a ser usado pelo hardware responsável pela coleta dos dados ambientais e de presença. Por fim, implementou-se o sistema web para processar, armazenar e disponibilizar essas informações em uma interface gráfica intuitiva e funcional. 
+
+# 3.1 Definições iniciais
+
+O fluxo de dados estabelecido inicia-se com os sensores de presença, temperatura e localização (GPS), responsáveis por captar as informações do ambiente. Esses dados são enviados a um microcontrolador com conectividade Wi-Fi, que realiza a transmissão segura via protocolo HTTPS para o servidor. 
+
+No servidor, as informações são processadas e armazenadas no banco de dados, de forma a possibilitar sua utilização posterior em relatórios ou visualizações no mapa interativo. A interface gráfica permite ao usuário analisar os dados e realizar ações, como ligar ou desligar aparelhos de refrigeração ambiente. 
+
+Quando o usuário altera o estado de um dispositivo, essa modificação é registrada no 
+
+servidor, que aguarda a próxima requisição periódica do microcontrolador para enviar o novo comando. A Figura 3.1 ilustra o fluxo completo de comunicação entre os componentes do sistema. 
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/4e7be4044751ffe07a78cff34a6a8f4855d2a3f80d0adbfc410555c51da23c45.jpg)
+
+
+
+Figura 3.1 – Fluxo de dados do sistema
+
+
+
+Fonte: Própria
+
+
+# 3.2 Dispositivo de hardware
+
+O dispositivo de hardware foi projetado como um microcontrolador equipado com sensores para coleta das informações ambientais e de presença, além de ser capaz de acionar o aparelho de refrigeração ambiente. As variáveis consideradas essenciais para o sistema são: presença de pessoas, localização geográfica (latitude e longitude) e estado de funcionamento do aparelho. 
+
+Com base no projeto proposto por Furtunato (2024), foram selecionados os seguintes componentes como opções viáveis para o dispositivo: 
+
+• Sensor de presença: Sensor Infravermelho Passivo (PIR), utilizado para detectar movimentação no ambiente. 
+
+# 3.3. SISTEMA WEB
+
+• Receptor infravermelho: Sensor VS1838, empregado para captar e codificar os comandos do controle remoto do dispositivo de refrigeração ambiente. 
+
+• Transmissor infravermelho: LED emissor infravermelho, responsável por enviar os comandos de ligar e desligar ao aparelho. 
+
+• Sensor de vibração ou temperatura: SW-420 (vibração) ou DHT11/DHT22 (temperatura), utilizados para identificar se o equipamento está em funcionamento. 
+
+• Módulo GPS (opcional): A localização pode ser definida durante a instalação, gravando as coordenadas (latitude e longitude) no microcontrolador via Bluetooth, a partir de um smartphone. 
+
+# 3.3 Sistema web
+
+A primeira etapa do desenvolvimento do sistema web consistiu na definição da estrutura de domínio e das entidades do banco de dados. A Figura 3.2 apresenta o diagrama entidade-relacionamento que serviu de base para o projeto. 
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/00ccd547c6650e5458e1906bebd61bef0418cb1a69defc2c24ee0d3f5fdaf2ff.jpg)
+
+
+
+Figura 3.2 – Diagrama entidade-relacionamento
+
+
+
+Fonte: Própria
+
+
+A entidade device representa os dados provenientes do microcontrolador, incluindo a zona à qual pertence, token de autenticação, localização e informações do estado do aparelho de refrigeração ambiente. A entidade zone define as áreas físicas da instituição, sendo cada dispositivo vinculado a uma única zona. A entidade users armazena as infor-
+
+mações dos usuários, que podem estar associados a uma ou mais zonas por meio da tabela intermediária users_zone, de acordo com o papel (role) no sistema: ADMIN, MANAGER ou USER. 
+
+Os usuários do tipo USER podem visualizar e alterar o estado dos dispositivos de suas zonas. Os MANAGERS possuem, adicionalmente, permissões para gerenciar usuários e zonas sob sua responsabilidade. Os ADMINS têm acesso irrestrito a todas as zonas e funções do sistema. 
+
+A entidade activity_history registra os intervalos de uso de cada aparelho, armazenando as datas de ativação e desativação, o que permite o cálculo do tempo de operação e a geração de relatórios. A entidade recover_password gerencia o processo de redefinição de senha dos usuários, controlando tokens de recuperação e sua validade. 
+
+As tecnologias empregadas foram escolhidas com base nas utilizadas pela Superintendência de Tecnologia da Informação (STI) da UFRN, garantindo compatibilidade e facilidade de manutenção. As principais ferramentas e frameworks adotados incluem: 
+
+• Java 17 
+
+• Spring Boot 3.2.11: Framework principal para o back-end. 
+
+• Spring Security: Autenticação e autorização de usuários. 
+
+• Spring Web: Implementação de controladores e rotas HTTP. 
+
+• Spring Data JPA: Mapeamento objeto-relacional e persistência. 
+
+• PostgreSQL: Banco de dados relacional. 
+
+• Thymeleaf: Motor de templates para renderização de páginas dinâmicas. 
+
+• Flyway: Controle e versionamento das migrações do banco de dados. 
+
+• Lombok: Redução de código repetitivo em classes Java. 
+
+• Bean Validation: Validação de dados de entrada. 
+
+• Leaflet: Biblioteca JavaScript para criação de mapas interativos. 
+
+• Bootstrap: Framework CSS para estilização e responsividade. 
+
+O ambiente de desenvolvimento foi composto pelas ferramentas: IntelliJ IDEA, PostgreSQL, DBeaver, Git/GitHub e Maven. 
+
+O projeto foi criado a partir do Spring Initializr, configurando as dependências básicas e versionado no GitHub. Em seguida, foram elaborados os scripts SQL de migração com o Flyway, conforme o modelo de dados da Seção 3.1. A Figura 3.3 apresenta as migrações criadas, e o Código 3.1 exibe o script da tabela users. 
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/43234e9b38268064b816ba9018a22c759fc2c1334c89f43cf8a9d47d627bb3d0.jpg)
+
+
+
+Figura 3.3 – Migrações criadas no projeto
+
+
+
+Fonte: Própria
+
+
+```sql
+create table users ( id bigserial primary key, name varchar not null, email varchar unique not null, login varchar unique not null, password varchar not null, role varchar not null, created_at timestamp not null default now(), updated_at timestamp ); 
+```
+
+Listing 3.1 – Script SQL de criação da tabela users (Fonte: Própria.) 
+
+A aplicação foi estruturada segundo o padrão arquitetural MVC (Model-View-Controller). As camadas foram organizadas conforme apresentado na Figura 3.4: 
+
+• Model: Contém as classes de domínio. 
+
+• Repository: Define as interfaces de acesso ao banco de dados. 
+
+• Service: Implementa a lógica de negócio. 
+
+• Controller: Gerencia as rotas e o fluxo entre front-end e back-end. 
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/b3d06c589546438b59fe63bb03889c3bf8694d5235c3d7a5ea0d587730a83db0.jpg)
+
+
+
+Figura 3.4 – Estrutura em camadas do projeto
+
+
+
+Fonte: Própria
+
+
+As classes de domínio foram anotadas com JPA (Java Persistence API) e Lombok, permitindo o mapeamento objeto-relacional e reduzindo a redundância de código. O Có- digo 3.2 ilustra a implementação da classe users. 
+
+package com.lyndonjonhson.tccmanager.model;   
+import jakartaPersistence. $\star$ .   
+import lombok. $\star$ .   
+import org.hibernateannotations.CreationTimestamp;   
+import org.hibernateannotations.UpdateTimestamp; 
+
+import java.io.Serializable;   
+import java.util.ArrayList;   
+import java.util.Date;   
+import java.util.List;   
+import java.util.stream Collectors;   
+@Entity   
+@Table(name $=$ "users")   
+@Data   
+@Builder   
+@NoArgsConstructor   
+@AllArgsConstructor   
+@ToString   
+@EqualsAndCookie(of $=$ "id")   
+public class User implementsSerializable{ @Id @GeneratedValuestrategy $=$ GenerationType.IDENTITY) private Long id; private String name; private String email; private String login; private String password; @Enumerated(EnumType STRING) private Role role; @ToStringExclude 
+
+@ManyToMany(fetch = FetchType.EAGER)   
+@JoinTable( name $=$ "users-zone", joinColumns $\equiv$ @JoinColumn(name $\equiv$ "user_id"), inverseJoinColumns $\equiv$ @JoinColumn(name $\equiv$ "zone_id")   
+）   
+private List<Zone> zones $=$ new ArrayList<>();   
+@Temporal(TemporalType.TIMESTAMP)   
+@CreationTimestamp   
+@Column(name $\equiv$ "created_at", updatable $\equiv$ false)   
+private Date createdAt;   
+@Temporal(TemporalType.TIMESTAMP)   
+@UpdateTimestamp   
+@Column(name $\equiv$ "updated_at")   
+private Date updadedAt;   
+public String getJoinZones() { return zones.stream().map(zone-> zone.getId().toString()); collect(Collectors joinsing("，"));   
+} 
+
+
+Listing 3.2 – Implementação da classe Users (Fonte: Própria.)
+
+
+O desenvolvimento seguiu uma metodologia incremental. Para cada funcionalidade, criou-se primeiramente o repository, seguido pelo service com a lógica de negócio e, por fim, o controller que conecta o front-end ao back-end. Somente após essa estrutura estar funcional, procedeu-se à criação das páginas e componentes visuais. 
+
+# 3.4 Interface e funcionalidades
+
+As primeiras funcionalidades implementadas foram o cadastro, login e recuperação de senha. As Figuras 3.5 a 3.8 exibem as telas correspondentes. 
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/fc0206825355e727135abf06dbd51b654004f78eb60a61d53f5af40421574f2e.jpg)
+
+
+
+Figura 3.5 – Tela de login
+
+
+
+Fonte: Própria
+
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/7715afc28f2cbfc83137d8a813109f67376d7511bfdfddb832b08794c347afc8.jpg)
+
+
+
+Figura 3.6 – Tela de cadastro
+
+
+
+Fonte: Própria
+
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/6d6f3f09d8b9e2291ba22e06c5dc2a37939d39ff555fbb2f572cb0666f5aaabe.jpg)
+
+
+
+Figura 3.7 – Tela de recuperação de senha
+
+
+
+Fonte: Própria
+
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/28e417e78826c58d9bbd56bd0c95a7d12e5c3b58c78da96887747bfdc432c180.jpg)
+
+
+
+Figura 3.8 – Tela de redefinição de senha
+
+
+
+Fonte: Própria
+
+
+O controle de autenticação e autorização foi desenvolvido com o Spring Security, garantindo acesso restrito às rotas conforme o papel do usuário. 
+
+Após o login, o sistema direciona o usuário à tela inicial (Figura 3.9), com menu lateral de navegação (Figura 3.10). As três primeiras opções - Início, Mapa e Histórico - são acessíveis a todos os usuários. As seções de Zonas e Permissões são restritas a perfis 
+
+administrativos. 
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/81d3e36d3f94a7769920ac18aa70c0641e223971a7fa1ec42333dea86650ca36.jpg)
+
+
+
+Figura 3.9 – Tela inicial do sistema
+
+
+
+Fonte: Própria
+
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/516fe1f180f50fa1357be13aec38221d2807460805b8da4caf38002b82929c00.jpg)
+
+
+
+Figura 3.10 – Opções do usuário no cabeçalho
+
+
+
+Fonte: Própria
+
+
+Na seção “Mapa”, o sistema exibe um mapa interativo da UFRN (Figura 3.11), com marcadores coloridos que indicam o status de cada aparelho de refrigeração ambiente. O usuário pode interagir com os marcadores para visualizar informações detalhadas e realizar ações (Figura 3.12). O mapa é atualizado automaticamente a cada minuto. 
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/f2a664250adcb44c370f2ebbeb543bf440d612cc3cc1265b9c0d1cec4df14414.jpg)
+
+
+
+Figura 3.11 – Mapa interativo com dispositivos georreferenciados
+
+
+
+Fonte: Própria
+
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/9d5f1a69dc317739fb8f9920659419a799ff364fafc46f195d4a933e9216cdb2.jpg)
+
+
+
+Figura 3.12 – Popup com informações e ações do dispositivo
+
+
+
+Fonte: Própria
+
+
+As cores dos marcadores representam o estado dos dispositivos: 
+
+• Vermelho: Refrigerador ambiente ligado sem presença detectada. 
+
+• Azul: Refrigerador ambiente desligado. 
+
+• Verde: Refrigerador ambiente ligado com presença detectada. 
+
+A funcionalidade “Histórico” (Figura 3.13) permite consultar intervalos de funcionamento dos aparelhos, apresentando data, hora e duração de uso. Os registros podem ser exportados em formato CSV. 
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/698d1baa9ba146fdfb682554a798c1b331665878dda8efacf8113c9655dd4fec.jpg)
+
+
+
+Figura 3.13 – Tela de histórico de funcionamento dos dispositivos
+
+
+Fonte: Própria 
+
+As seções “Zonas” e “Permissões” são voltadas à administração. Em “Zonas” (Figuras 3.14 e 3.15), é possível criar, editar e excluir zonas, definindo seus identificadores únicos. Em “Permissões” (Figuras 3.16 e 3.17), é possível gerenciar usuários e seus níveis de acesso. 
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/daecd5f52b1dc35cd8c7d5d9afda1843406586ad0031c641543dd4a562f9143a.jpg)
+
+
+
+Figura 3.14 – Tela de administração de zonas
+
+
+Fonte: Própria 
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/55beb116dceb69f6bf15974f464af9adb559bfb340c58261412d9f9563c843b9.jpg)
+
+
+
+Figura 3.15 – Formulário de cadastro de zona
+
+
+Fonte: Própria 
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/457a2a8325f3149e58c62fa03bd84bbb32a76cd578c4274c4c6ca08d822cc067.jpg)
+
+
+
+Figura 3.16 – Tela de administração de permissões
+
+
+
+Fonte: Própria
+
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/81ab91f8d3687be660667103f2e34c9bb9cbe2cf3ac93f8b72552578e8842f26.jpg)
+
+
+
+Figura 3.17 – Edição de permissões de usuários
+
+
+
+Fonte: Própria
+
+
+Usuários com papel MANAGER podem editar apenas usuários do tipo USER, enquanto o ADMIN possui controle total sobre todos os perfis e zonas. 
+
+O sistema implementado cumpre os objetivos propostos: monitorar o uso dos aparelhos de refrigeração ambiente, registrar seu histórico de funcionamento e disponibilizar uma interface georreferenciada que permite o controle remoto e a tomada de decisões de 
+
+# 3.4. INTERFACE E FUNCIONALIDADES
+
+forma rápida e eficiente. 
+
+# Capítulo 4
+
+# Experimentos e Resultados
+
+Este capítulo apresenta os experimentos realizados para validação das principais funcionalidades do sistema desenvolvido, bem como os resultados obtidos e a análise crítica de seu desempenho. Os testes foram planejados para verificar o correto funcionamento das rotinas de georreferenciamento, controle de estados dos aparelhos de refrigeração ambiente e geração de histórico de atividades. 
+
+# 4.1 Metodologia Experimental
+
+# O quê foi testado
+
+Foram testadas as seguintes funcionalidades principais do sistema: 
+
+• Visualização georreferenciada dos dispositivos no mapa interativo; 
+
+• Controle remoto de estados dos aparelhos (ligar/desligar); 
+
+• Registro e geração de histórico de uso dos dispositivos; 
+
+• Controle de permissões de acesso dos usuários. 
+
+# Onde foi realizado
+
+Os testes foram executados utilizando a área correspondente ao Setor 4 da Universidade Federal do Rio Grande do Norte (UFRN) como cenário de referência. Essa área foi 
+
+escolhida por representar um ambiente real de uso, com múltiplos aparelhos cadastrados e subdivisão por zonas. 
+
+# Quando foi realizado
+
+Os experimentos foram conduzidos em ambiente local, durante a fase de implementa-ção do sistema, com o objetivo de validar seu funcionamento antes de um eventual teste em campo. 
+
+# Como foi realizado
+
+Para a simulação dos dispositivos, foi desenvolvido um pequeno servidor em JavaScript (chamado dispositivo de teste), responsável por enviar periodicamente requisições ao sistema contendo informações sobre o estado e a localização do aparelho de refrigera-ção ambiente. 
+
+Durante os testes, foi criado um usuário com permissão do tipo USER, o que permitiu avaliar se as restrições de acesso e visualização estavam adequadamente implementadas. Foram também adicionados dispositivos em diferentes zonas para verificar se o sistema impedia corretamente a visualização de dispositivos pertencentes a setores não autorizados. 
+
+# 4.2 Apresentação dos Resultados
+
+# 4.2.1 Visualização e controle de permissões
+
+A Figura 4.1 apresenta a interface de visualização do mapa para o usuário de permissão USER. Observa-se que o menu lateral exibe apenas as opções permitidas a esse tipo de perfil, ocultando as funções administrativas. 
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/1cd72f16e0f8aa735ff5acd5e8d7c2a4305774ab11c7f8951da8bbf7f20f4739.jpg)
+
+
+
+Figura 4.1 – Tela de visualização do mapa durante os testes
+
+
+
+Fonte: Própria
+
+
+A Figura 4.2 mostra os dispositivos cadastrados no banco de dados. Os dispositivos de ID 33, 34 e 35 pertencem a outras zonas e foram adicionados propositalmente para verificar se o sistema impediria a visualização de dispositivos externos à zona do usuário. Como demonstrado na Figura 4.1, tais dispositivos não aparecem no mapa, comprovando a eficácia do controle de acesso implementado. 
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/1057d1fbb66a330f4c5a6787c20eabd9a38197d6c11b09c94bd193b0e06be8e1.jpg)
+
+
+
+Figura 4.2 – Dispositivos registrados no banco de dados
+
+
+
+Fonte: Própria
+
+
+# 4.2.2 Teste de georreferenciamento
+
+Para verificar a precisão do georreferenciamento, foi comparada a posição de um dispositivo no mapa do sistema (Figura 4.3) com a mesma coordenada geográfica plotada no Google Maps (Figura 4.4). As localizações apresentaram sobreposição precisa, confirmando a confiabilidade do uso da biblioteca Leaflet para esse propósito. 
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/940069af723c7b98e0779f1af37e18a3dac0748c2d6eb66f896abfb9047071a3.jpg)
+
+
+
+Figura 4.3 – Localização do dispositivo no mapa do sistema
+
+
+
+Fonte: Própria
+
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/b64a3203db64606a0d41d76686f7014ed60708a79e6c482902c59864caafaf28.jpg)
+
+
+
+Figura 4.4 – Localização do mesmo dispositivo no Google Maps
+
+
+
+Fonte: (Google Maps, 2025)
+
+
+# 4.2.3 Teste de mudança de estado dos dispositivos
+
+Para avaliar o controle de estados, foi utilizado o dispositivo de teste, configurado para enviar periodicamente suas informações ao sistema. Inicialmente, o dispositivo foi cadastrado com estado ligado e sem detecção de presença no ambiente, conforme ilustram as Figuras 4.5 e 4.6. 
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/674b5b4007537e1d601ece75f0a9144511383921c7f3b948f5b308facd21cff4.jpg)
+
+
+
+Figura 4.5 – Dispositivo de teste visualizado no mapa
+
+
+
+Fonte: Própria
+
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/1bb0dbc30dae2233a07fc9d04a5f05f2852d2a5fffba6e3fc6a8960bee1a3789.jpg)
+
+
+
+Figura 4.6 – Informações detalhadas do dispositivo de teste
+
+
+
+Fonte: Própria
+
+
+Ao selecionar a opção “Desligar”, o sistema registra o comando no banco de dados para que, na próxima requisição do dispositivo, o estado seja atualizado conforme indicado na Figura 4.7. Após o recebimento da instrução, o dispositivo é exibido no mapa com o novo estado (Figura 4.8). 
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/228d4abef3c32c4a8b7eaea9f6ed3936a31770c4cd39bd8107cf37aa6f72a0a6.jpg)
+
+
+
+Figura 4.7 – Dados retornados para atualização do estado do dispositivo
+
+
+
+Fonte: Própria
+
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/873514e46734dc5573fee45784ab40031c4c5e64760a5cdd2daa0485680527a4.jpg)
+
+
+
+Figura 4.8 – Dispositivo após atualização do estado para “desligado”
+
+
+
+Fonte: Própria
+
+
+# 4.2.4 Geração e exportação do histórico de atividades
+
+Por fim, testou-se o módulo de histórico de atividades dos dispositivos. O dispositivo de teste foi ligado e desligado duas vezes, gerando dois registros distintos no histórico, conforme a Figura 4.9. Também foi validada a exportação dos dados para arquivo CSV (Figura 4.10), contendo os horários de ativação e desligamento, além da duração de cada sessão. 
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/fbf480006cf5aedf548cfe4144d2086640d251e4bb56ac6885fd34ce797a35ce.jpg)
+
+
+
+Figura 4.9 – Histórico de atividades do dispositivo de teste
+
+
+
+Fonte: Própria
+
+
+![image](https://cdn-mineru.openxlab.org.cn/result/2026-04-23/eecf9b36-3845-475c-8368-2fd323acf536/f569fce3c0c3aaff946bdaffc25405df82f9f4145de4380f8468c4a3dc1b0251.jpg)
+
+
+
+Figura 4.10 – Arquivo CSV gerado com o histórico de uso
+
+
+
+Fonte: Própria
+
+
+# 4.3 Análise e Discussão dos Resultados
+
+Em todos os experimentos realizados, o sistema apresentou comportamento coerente com o esperado, com $100 \%$ de sucesso em todos os testes realizados. Os testes de vi-
+
+sualização confirmaram o correto funcionamento das permissões por zona, garantindo a segurança dos dados. O georreferenciamento demonstrou precisão satisfatória, com correspondência exata entre as coordenadas utilizadas no sistema e as exibidas no Google Maps. O controle de estados mostrou-se eficiente e responsivo, com atualização automá- tica do status dos dispositivos a cada requisição do cliente. 
+
+O módulo de histórico funcionou adequadamente, permitindo tanto o acompanhamento em tempo real quanto a exportação dos registros. Dessa forma, as funcionalidades essenciais para o gerenciamento remoto e inteligente de aparelhos de refrigeração ambiente foram validadas com sucesso. 
+
+Como limitação, destaca-se que os testes foram conduzidos em ambiente simulado, sem comunicação com dispositivos físicos reais, o que poderá ser abordado em trabalhos futuros para análise de desempenho em cenários de produção. 
+
+# Capítulo 5
+
+# Conclusão
+
+O presente trabalho teve como objetivo principal o desenvolvimento de um sistema web para o gerenciamento de aparelhos de refrigeração ambiente, possibilitando o controle remoto e o georreferenciamento desses dispositivos. A proposta surgiu da necessidade de otimizar o uso dos equipamentos e reduzir o consumo energético em instituições públicas, promovendo uma gestão mais eficiente e sustentável. 
+
+Durante o desenvolvimento, foi implementado um sistema capaz de monitorar, em tempo real, o estado dos aparelhos de refrigeração ambiente, por meio de uma interface intuitiva e de um mapa interativo que facilitam o acompanhamento e o controle dos dispositivos instalados. Os experimentos realizados demonstraram a eficiência da solução proposta e confirmaram o alcance dos objetivos estabelecidos, evidenciando o potencial do sistema para melhorar a gestão e contribuir para a redução do consumo energético. 
+
+Embora os resultados tenham sido satisfatórios, não foi possível realizar testes em ambientes reais com um número elevado de dispositivos. No entanto, essa limitação não compromete a relevância e a aplicabilidade do trabalho, que demonstra a viabilidade de sistemas web administrativos para o gerenciamento ágil e inteligente de recursos. 
+
+Como perspectivas futuras, recomenda-se a implementação de um mecanismo de desligamento automático para aparelhos identificados como ligados em ambientes sem presença de pessoas, após um período predefinido de inatividade. Além disso, sugere-se a integração do sistema aos sistemas administrativos institucionais, como o da UFRN, o 
+
+que é tecnicamente viável devido ao uso de tecnologias compatíveis. Outras possíveis evoluções incluem o uso de técnicas de manutenção preditiva com inteligência artificial e o desenvolvimento de um aplicativo móvel para acesso e controle remoto. 
+
+Conclui-se, portanto, que o trabalho desenvolvido representa um passo relevante em direção ao uso mais consciente e eficiente dos recursos energéticos. Ele evidencia que o emprego de tecnologias baseadas em IoT e sistemas web pode contribuir significativamente para a sustentabilidade e a modernização da gestão em instituições públicas. 
+
+# Referências Bibliográficas
+
+
+
+ALURA. O que é Git e GitHub: os primeiros passos nessas ferramentas. 2020. Acesso em: 4 nov. 2025. Disponível em: <https://www.alura.com.br/artigos/o-que-e-git-github/ > . 
+
+
+
+
+
+ANDRADE, A. P. d. O que é o Spring? 2020. Acesso em: 26 out. 2025. Disponível em: <https://www.treinaweb.com.br/blog/o-que-e-o-spring/>. 
+
+
+
+
+
+BARROS, J. O que são os Sistemas de Informação Geográfica (SIG) e quais suas aplicações. 2025. Acesso em: 23 out. 2025. Disponível em: <https: //www.geoaplicada.com/sig-e-suas-aplicacoes/>. 
+
+
+
+
+
+BRASIL, C. Internet das Coisas: o que é, como funciona e exemplos de uso. 2023. Acesso em: 23 out. 2025. Disponível em: <https://www.cnnbrasil.com.br/tecnologia/ internet-das-coisas/>. 
+
+
+
+
+
+DANILOC. ThermTerm: Open-source heat pump and HVAC controller. 2025. Acesso em: 26 out. 2025. Disponível em: <https://github.com/daniloc/ThermTerm/>. 
+
+
+
+
+
+DAVIDUSB-GEEK. EMHASS: Energy Management for Home Assistant. 2025. Acesso em: 26 out. 2025. Disponível em: <https://github.com/davidusb-geek/emhass/>. 
+
+
+
+
+
+FURTUNATO, A. B. O. Projeto de Automação de um Ar-Condicionado com Arduino Mediante Sensor de Presença. 2024. Acesso em: 26 out. 2025. Disponível em: <https://repositorio.ufrn.br/items/59557faf-27a5-410b-b928-8597fc46cddc/>. 
+
+
+
+
+
+Geo sem Fronteiras. Geolocalização de dispositivos e sua precisão. 2024. Acesso em: 24 out. 2025. Disponível em: <https://geosemfronteiras.org/blog/ geolocalizacao-de-dispositivos/>. 
+
+
+
+
+
+GERALDI, M. S. et al. Impact of implementing air-conditioning systems on the school building stock in brazil considering climate change effects: a bottom-up benchmarking. In: Proceedings of Building Simulation 2021: 17th Conference of IBPSA. [S.l.: s.n.], 2021. 
+
+
+
+
+
+Google Maps. Google Maps. 2025. Acesso em: 9 nov. 2025. Disponível em: <https://www.google.com/maps>. 
+
+
+
+
+
+Jakarta Bean Validation. Jakarta Bean Validation Specification. 2025. Acesso em: 30 out. 2025. Disponível em: <https://jakarta.ee/specifications/bean-validation/>. 
+
+
+
+
+
+Jornal da USP. Temperatura global aumenta $1 , 6 ~ ^ { \circ } C$ e segue subindo: 
+
+
+
+
+
+“ $\acute { E }$ como tentar parar um caminhão em alta velocidade”. 2025. 
+
+
+
+
+
+Acesso em: 27 out. 2025. Disponível em: <https://jornal.usp.br/ciencias/ temperatura-global-aumenta-16c-e-segue-subindo-e-como-tentar-parar-um-caminhao-em-alta-velocidade/ > . 
+
+
+
+
+
+LEAFLET. Leaflet — an open-source JavaScript library for interactive maps. 2025. 
+
+
+
+
+
+Acesso em: 26 out. 2025. Disponível em: <https://leafletjs.com/>. 
+
+
+
+
+
+LOMBOK. Project Lombok – Boilerplate code reduction for Java. 2025. Acesso em: 30 out. 2025. Disponível em: <https://projectlombok.org/>. 
+
+
+
+
+
+Mozilla Foundation. CSS: Cascading Style Sheets. 2025. Acesso em: 26 out. 2025. 
+
+
+
+
+
+Disponível em: <https://developer.mozilla.org/pt-BR/docs/Web/CSS/>. 
+
+
+
+
+
+Mozilla Foundation. HTML: Linguagem de Marcação de Hipertexto. 2025. Acesso em: 
+
+
+
+
+
+26 out. 2025. Disponível em: <https://developer.mozilla.org/pt-BR/docs/Web/HTML/>. 
+
+
+
+
+
+Mozilla Foundation. O que é JavaScript? – Aprendendo desenvolvimento web. 2025. 
+
+
+
+
+
+Acesso em: 26 out. 2025. Disponível em: <https://developer.mozilla.org/pt-BR/docs/ 
+
+
+
+
+
+Learn_web_development/Core/Scripting/What_is_JavaScript/>. 
+
+
+
+
+
+ONOMONDO. IoT networking protocols: overview and advantages. 2023. 
+
+
+
+
+
+Acesso em: 23 out. 2025. Disponível em: <https://onomondo.com/blog/ 
+
+
+
+
+
+iot-networking-protocols-overview-and-advantages/>. 
+
+
+
+
+
+ORACLE. Java Platform, Standard Edition Documentation. 2025. Acesso em: 26 out. 
+
+
+
+
+
+2025. Disponível em: <https://www.oracle.com/java/>. 
+
+
+
+
+
+SOFTWARE, R. Database Migrations Made Easy. 2025. Acesso em: 29 out. 2025. 
+
+
+
+
+
+Disponível em: <https://flywaydb.org/>. 
+
+
+
+
+
+SOUZA, Arquitetura MVC: entendendo o modelo-visão-controlador. 2023. 
+
+
+
+
+
+Acesso em: 29 out. 2025. Disponível em: <https://www.dio.me/articles/ 
+
+
+
+
+
+arquitetura-mvc-entendendo-o-modelo-visao-controlador/>. 
+
+
+
+
+
+SPRING. Spring Boot – Official Documentation. 2025. Acesso em: 26 out. 2025. 
+
+
+
+
+
+Disponível em: <https://spring.io/projects/spring-boot/>. 
+
+
+
+
+
+SPRING. Spring Data – Official Documentation. 2025. Acesso em: 26 out. 2025. 
+
+
+
+
+
+Disponível em: <https://spring.io/projects/spring-data/>. 
+
+
+
+
+
+SPRING. Spring Framework – Official Documentation. 2025. Acesso em: 26 out. 2025. 
+
+
+
+
+
+Disponível em: <https://spring.io/projects/spring-framework/>. 
+
+
+
+
+
+SPRING. Spring Security – Official Documentation. 2025. Acesso em: 26 out. 2025. 
+
+
+
+
+
+Disponível em: <https://spring.io/projects/spring-security/>. 
+
+
+
+
+
+The Apache Software Foundation. Apache Maven – Project Documentation. 2025. 
+
+
+
+
+
+Acesso em: 26 out. 2025. Disponível em: <https://maven.apache.org/>. 
+
+
+
+
+
+The PostgreSQL Global Development Group. PostgreSQL Documentation. 2025. Acesso 
+
+
+
+
+
+em: 26 out. 2025. Disponível em: <https://www.postgresql.org/>. 
+
+
+
+
+
+THYMELEAF. Thymeleaf Documentation. 2025. Acesso em: 26 out. 2025. Disponível 
+
+
+
+
+
+em: <https://www.thymeleaf.org/>. 
+

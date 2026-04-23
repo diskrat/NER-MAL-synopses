@@ -1,29 +1,29 @@
 {
   "sentence": {
-    "documents_processed": 1,
-    "segments_total": 1,
-    "segments_with_entities": 1,
-    "total_entities": 33,
-    "unique_entities": 33,
-    "avg_entities_per_segment": 33.0,
-    "processing_time_seconds": 0.001
+    "documents_processed": 12,
+    "segments_total": 6636,
+    "segments_with_entities": 1817,
+    "total_entities": 2957,
+    "unique_entities": 442,
+    "avg_entities_per_segment": 1.627,
+    "processing_time_seconds": 0.039
   },
   "paragraph": {
-    "documents_processed": 1,
-    "segments_total": 39,
-    "segments_with_entities": 39,
-    "total_entities": 135,
-    "unique_entities": 32,
-    "avg_entities_per_segment": 3.462,
-    "processing_time_seconds": 0.002
+    "documents_processed": 12,
+    "segments_total": 1166,
+    "segments_with_entities": 602,
+    "total_entities": 1928,
+    "unique_entities": 436,
+    "avg_entities_per_segment": 3.203,
+    "processing_time_seconds": 0.028
   },
   "k_chars": {
-    "documents_processed": 1,
-    "segments_total": 29,
-    "segments_with_entities": 29,
-    "total_entities": 85,
-    "unique_entities": 32,
-    "avg_entities_per_segment": 2.931,
-    "processing_time_seconds": 0.002
+    "documents_processed": 12,
+    "segments_total": 1275,
+    "segments_with_entities": 876,
+    "total_entities": 2323,
+    "unique_entities": 426,
+    "avg_entities_per_segment": 2.652,
+    "processing_time_seconds": 0.027
   }
 }
