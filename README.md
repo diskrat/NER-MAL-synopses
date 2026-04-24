@@ -4,7 +4,7 @@
 - **João Victor Moura**
 
 ## (v) Vídeo de Apresentação
-- **Link Loom:** [Vídeo de apresentação](https://loom.com/share/XXXXX) 
+- **Link Loom:** [Vídeo de apresentação](https://www.loom.com/share/5dd92d686e044df7a4e8217f67b605fd) 
 ---
 
 ## (ii) Descrição Detalhada das Atividades Realizadas
